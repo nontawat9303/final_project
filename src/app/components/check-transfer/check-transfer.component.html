@@ -1,0 +1,46 @@
+<!-- Main -->
+<div class="flex flex-col flex-auto items-center p-6 sm:p-10">
+    <div class="flex flex-col w-full max-w-4xl">
+        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
+            CheckTransfer
+        </div>
+        <!-- Form -->
+        <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card">
+            <mat-form-field class="w-full">
+                <input  matInput disabled="disabled"  [value]="bank">
+                <mat-label>โอนเงินเข้าบัญชี :</mat-label>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <input matInput disabled="disabled" [value]="date">
+                <mat-label>วันเวลาที่โอน :</mat-label>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <input matInput disabled="disabled" [value]="payAmount">
+                <mat-label>ยอดโอน :</mat-label>
+            </mat-form-field>
+
+            
+            <div class="flex items-center justify-start">
+                    <!-- <img  [src]="sanitize('data:image/jpg;base64, ' + _arrayBufferToBase64(slip))" alt="Image"
+                      style="max-height: 400px; max-width: 250px;" class="p-4" > -->
+
+                <button class="ml-2 " mat-flat-button [color]="'primary'" >
+                    ตรวจสลิป
+                </button>
+
+            </div>
+
+            <div class="flex items-center justify-end">
+                <button class="ml-2 " mat-flat-button [color]="'warn'" routerLink="/transfer">
+                    แก้ไขการโอน
+                </button>
+                <!-- <button class="ml-2 " mat-flat-button [color]="'warn'" >
+                    ปฏิเสธ
+                </button> -->
+                <button class="ml-2 " mat-flat-button [color]="'accent'" routerLink="/address">
+                    ยืนยัน
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

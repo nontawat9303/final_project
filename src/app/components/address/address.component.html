@@ -1,0 +1,153 @@
+<!-- Main -->
+<div class="flex flex-col flex-auto items-center p-6 sm:p-10">
+    <div class="flex flex-col w-full max-w-4xl">
+        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
+            Address
+        </div>
+        <!-- Form -->
+        <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card">
+
+            <!-- <div class="row"> -->
+            <mat-form-field class="w-full">
+                <input matInput [placeholder]="'ใส่ที่อยู่'" [(ngModel)]="fullAdress">
+                <mat-label>ใส่ที่อยู่</mat-label>
+            </mat-form-field>
+            <!-- </div> -->
+            <div class="flex items-center justify-end">
+                <button class="ml-2" mat-flat-button [color]="'primary'" (click)="splitAddress()">
+                    ตัวช่วยจำแนก
+                </button>
+                <button class="ml-2" mat-flat-button [color]="'accent'" (click)="clearForm()">
+                    รีเซ็ต
+                </button>
+            </div>
+            <form class="space-y-3" [formGroup]="addressForm" #addressNgForm="ngForm" (ngSubmit)="addressSubmit()">
+
+                <mat-form-field class="w-full">
+                    <input [value]="name" matInput [formControlName]="'name'" [required]="true">
+                    <mat-label>ชื่อ</mat-label>
+                    <mat-error *ngIf="addressForm.get('name').hasError('required')">
+                        กรุณากรอกชื่อ
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <input [value]="singleAddress" matInput [formControlName]="'singleAddress'" [required]="true">
+                    <mat-label>ที่อยู่</mat-label>
+                    <mat-error *ngIf="addressForm.get('singleAddress').hasError('required')">
+                        กรุณากรอกที่อยู่
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <input [value]="subdistrict" matInput [formControlName]="'subdistrict'" [required]="true">
+                    <mat-label>ตำบล</mat-label>
+                    <mat-error *ngIf="addressForm.get('subdistrict').hasError('required')">
+                        กรุณากรอกตำบล
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <input [value]="district" matInput [formControlName]="'district'" [required]="true">
+                    <mat-label>อำเภอ</mat-label>
+                    <mat-error *ngIf="addressForm.get('district').hasError('required')">
+                        กรุณากรอกอำเภอ
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <input [value]="province" matInput [formControlName]="'province'" [required]="true">
+                    <mat-label>จังหวัด</mat-label>
+                    <mat-error *ngIf="addressForm.get('province').hasError('required')">
+                        กรุณากรอกจังหวัด
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <input [value]="phone" matInput [formControlName]="'phone'" [required]="true">
+                    <mat-label>เบอร์โทร</mat-label>
+                    <mat-error *ngIf="addressForm.get('phone').hasError('required')">
+                        กรุณากรอกเบอร์โทร
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <input [value]="zipcode" matInput [formControlName]="'zipcode'" [required]="true">
+                    <mat-label>รหัสไปรษณีย์</mat-label>
+                    <mat-error *ngIf="addressForm.get('zipcode').hasError('required')">
+                        กรุณากรอกรหัสไปรษณีย์
+                    </mat-error>
+                </mat-form-field>
+            </form>
+            <form class="space-y-3" [formGroup]="deliveryForm" (ngSubmit)="onDeliveryFormSubmit()">
+                <div class="flex flex-col mt-8 gt-sm:mt-0 gt-sm:ml-16">
+                    <span class="font-semibold mb-2">การจัดส่ง*</span>
+                    <mat-radio-group class="flex flex-col " [color]="'primary'"
+                        [ngClass]="{'invalid': deliveryForm.get('typeDelivery').invalid}" formControlName="typeDelivery"
+                        [required]="true">
+                        <mat-radio-button class="mb-2" value="cod">
+                            ส่ง COD
+                        </mat-radio-button>
+                        <mat-radio-button class="mb-2" value="deposit">
+                            ฝากสินค้า
+                        </mat-radio-button>
+                        <mat-error *ngIf="deliveryForm.get('typeDelivery').hasError('required') && deliveryFormSubmit">
+                            กรุณาเลือกรูปแบบการจัดส่ง
+                        </mat-error>
+                    </mat-radio-group>
+                    <br>
+                </div>
+                <!-- <div class="flex flex-col">
+                <span class="font-semibold mb-2">By Email</span>
+                <div class="flex flex-col">
+                    <mat-checkbox
+                        class="mb-2"
+                        [checked]="true"
+                        [color]="'primary'">
+                        Company News
+                    </mat-checkbox>
+                    <mat-checkbox
+                        class="mb-2"
+                        [color]="'primary'">
+                        Featured Products
+                    </mat-checkbox>
+                    <mat-checkbox
+                        [checked]="true"
+                        [color]="'primary'">
+                        Messages
+                    </mat-checkbox>
+                </div>
+            </div> -->
+
+                <mat-form-field class="flex flex-col  pb-2">
+                    <mat-label>เลือกขนส่ง</mat-label>
+                    <!-- <span class="flex items-center justify-center" matPrefix>เลือกขนส่ง
+                    </span> -->
+                    <mat-select [formControlName]="'delivery'" [required]="true" placeholder="เลือกขนส่ง">
+                        <mat-option value="kerry">Kerry</mat-option>
+                        <mat-option value="j&t">J&T</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="deliveryForm.get('delivery').hasError('required')">
+                        กรุณาเลือกขนส่ง
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="flex flex-col  pb-2">
+                    <mat-label>เลือกสั่งพิมพ์</mat-label>
+                    <!-- <span class="flex items-center justify-center" matPrefix>เลือกสั่งพิมพ์
+                    </span> -->
+                    <mat-select [formControlName]="'typePrint'" [required]="true" placeholder="เลือกสั่งพิมพ์">
+                        <mat-option value="sticker">พิมพ์สติ๊กเกอร์</mat-option>
+                        <mat-option value="address">พิมพ์ใบแปะกล่อง</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="deliveryForm.get('typePrint').hasError('required')">
+                        กรุณาเลือกสั่งพิมพ์
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="flex items-center justify-end">
+                    <button class="ml-2 " mat-flat-button [color]="'primary'" routerLink="/transfer">
+                        แจ้งโอน
+                    </button>
+                    <button class="ml-2 " mat-flat-button [color]="'accent'" type="submit">
+                        ยืนยัน
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

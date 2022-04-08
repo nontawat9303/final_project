@@ -1,0 +1,99 @@
+<!-- Main -->
+<div class="flex flex-col flex-auto items-center p-6 sm:p-10">
+  <div class="flex flex-col w-full max-w-4xl">
+    <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
+      Transfer
+    </div>
+    <!-- Form -->
+    <form class="space-y-3" [formGroup]="transferForm" #transferNgForm="ngForm">
+      <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card">
+        <mat-form-field class="flex flex-col  pb-2">
+          <mat-label>โอนเงินเข้าบัญชี</mat-label>
+          <!-- <span class="flex items-center justify-center" matPrefix>เลือกบัญชี
+          </span> -->
+          <mat-select [formControlName]="'bank'" [required]="true" placeholder="เลือกรายการที่ต้องการ">
+            <mat-option value="{{bankAccount.bank}} {{bankAccount.name}} {{bankAccount.accountNumber}}" *ngFor="let bankAccount of bankAccount" >{{bankAccount.bank}} - {{bankAccount.name}} : {{bankAccount.accountNumber}} </mat-option>
+            <!-- <mat-option value="KBANK">กสิกร</mat-option> -->
+          </mat-select>
+          <mat-error *ngIf="transferForm.get('bank').hasError('required')">
+            กรุณาเลือกบัญชี
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="flex flex-col  pb-2">
+          <mat-label>เลือกเวลา</mat-label>
+          <input matInput [matDatepicker]="picker1" [formControlName]="'createdate'" [required]="true" >
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="transferForm.get('createdate').hasError('required')">
+            กรุณาเลือกเวลา
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <input matInput [formControlName]="'payAmount'" [required]="true">
+          <mat-label>ยอดโอน</mat-label>
+          <mat-error *ngIf="transferForm.get('payAmount').hasError('required')">
+            กรุณากรอกยอดโอน
+          </mat-error>
+        </mat-form-field>
+
+        <!-- <div class="upload-container">
+                <ng-container >
+                  <img 
+                    style="max-height: 100%; max-width: 100%;">
+                </ng-container>
+              </div> -->
+        <!-- <div class="col-md-3 col-6">
+                <label class="form-label mb-1"><b>แนบสลิป</b></label>
+                <div class="card card-border" style="box-shadow: none;height: 100%;max-height: 300px;">
+                  <div class="card-body">
+                    <div class="upload-container">
+                      <ng-container *ngIf="imageKbank && imageKbank.base64;">
+                        <img [src]="imageLicense.base64" *ngIf="imageLicense && imageLicense.base64"
+                          style="max-height: 100%; max-width: 100%;">
+                      </ng-container>
+                    </div>
+              </div>
+            <div class="flex items-center justify-end">
+                <input [accept]="'image/png, image/jpeg'" class="upload-input" name="file" type="file" (change)="getFile($event)" #fileUpload hidden>
+                <button class="ml-2 " mat-flat-button [color]="'primary'" (click)="fileUpload.click()">แนบไฟล์</button>
+            </div>
+          </div> -->
+
+        <div class="col-md-3 col-6">
+          <label class="form-label mb-1"><b>แนบสลิป*</b></label>
+          <!-- <div class="card-body"> -->
+          <div class="upload-container">
+            <ng-container *ngIf="imageKbank && imageKbank.base64;">
+              <img [src]="imageKbank.base64" *ngIf="imageKbank && imageKbank.base64 "
+                style="max-height: 400px; max-width: 250px;" class="p-4">
+            </ng-container>
+          </div>
+          <input [accept]="'image/png, image/jpeg'" class="upload-input " type="file" name="file" #fileKbank hidden
+            [disabled]="false" [multiple]="false" (change)="changeHandle($event)" [formControlName]="'paySlip'"
+            [required]="true">
+          <!-- </div> -->
+          <button class="mb-1" type="button" mat-flat-button [color]="'primary'"
+            (click)="clickHandle()">แนบไฟล์</button>
+          <mat-error *ngIf="transferForm.get('paySlip').hasError('required') && transferSubmit">
+            กรุณาแนบไฟล์
+          </mat-error>
+        </div>
+
+
+        <div class="flex items-center justify-end">
+          <button class="ml-2 " mat-flat-button [color]="'primary'" routerLink="/address">
+            ชำระแบบปลายทาง
+          </button>
+          <button class="ml-2 " mat-flat-button [color]="'warn'" routerLink="/open-bill">
+            รายการสินค้า
+          </button>
+          <button class="ml-2 " mat-flat-button [color]="'accent'"  (click)="transferFormSubmit()">
+            บันทึกการโอน
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

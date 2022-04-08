@@ -1,0 +1,303 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+
+    <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full sm:w-100 lg:border-r lg:shadow-none dark:bg-gray-900" [autoFocus]="false"
+            [(opened)]="drawerOpened" #drawer>
+
+            <!-- New chat -->
+            <ng-container *ngIf="drawerComponent === 'new-chat'">
+                <chat-new-chat [drawer]="drawer"></chat-new-chat>
+            </ng-container>
+
+            <!-- Profile -->
+            <!-- <ng-container *ngIf="drawerComponent === 'profile'">
+                <chat-profile [drawer]="drawer"></chat-profile>
+            </ng-container> -->
+
+        </mat-drawer>
+
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex overflow-hidden">
+
+            <!-- Chats list -->
+            <ng-container *ngIf="chats && chats.length > 0; else noChats">
+                <div
+                    class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-90 lg:max-w-90 bg-card dark:bg-transparent">
+
+                    <!-- Header -->
+                    <div class="flex flex-col flex-0 py-4 px-4 border-b bg-gray-50 dark:bg-transparent">
+                        <div class="flex items-center">
+                            <div class="flex items-center mr-1 cursor-pointer" (click)="openProfile()">
+                                <!-- <div class="w-10 h-10">
+                                    <ng-container *ngIf="profile.avatar">
+                                        <img class="object-cover w-full h-full rounded-full object-cover"
+                                            [src]="profile.avatar" alt="Profile avatar" />
+                                    </ng-container>
+                                    <ng-container *ngIf="!profile.avatar">
+                                        <div
+                                            class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                            {{profile.name.charAt(0)}}
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <div class="ml-4 font-medium truncate">
+                                    {{profile.name}}
+                                </div> -->
+                                <div class="font-bold truncate">
+                                    ข้อความทั้งหมด 250 รายการ
+                                </div>
+                            </div>
+                            <!-- <button class="ml-auto" mat-icon-button (click)="openNewChat()">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                            </button> -->
+                            <button class="ml-auto -mr-4" mat-icon-button [matMenuTriggerFor]="chatsHeaderMenu">
+                                <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                                <mat-menu #chatsHeaderMenu>
+                                    <button mat-menu-item>
+                                        <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon>
+                                        New group
+                                    </button>
+                                    <button mat-menu-item>
+                                        <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>
+                                        Create a room
+                                    </button>
+                                    <button mat-menu-item (click)="openProfile()">
+                                        <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+                                        Profile
+                                    </button>
+                                    <button mat-menu-item>
+                                        <mat-icon [svgIcon]="'heroicons_outline:archive'"></mat-icon>
+                                        Archived
+                                    </button>
+                                    <button mat-menu-item>
+                                        <mat-icon [svgIcon]="'heroicons_outline:star'"></mat-icon>
+                                        Starred
+                                    </button>
+                                    <button mat-menu-item>
+                                        <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
+                                        Settings
+                                    </button>
+                                </mat-menu>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <!-- <mat-icon svgIcon="mat_solid:swap_horizontal_circle" class="icon-size-6"></mat-icon> -->
+                            <button class="h-6 min-h-6 px-1 py-4 rounded-lg bg-blue-100 mr-1" mat-button>
+                                <mat-icon svgIcon="heroicons_outline:chat" class="text-blue-800 icon-size-4"></mat-icon>
+                                <span class="font-semibold text-blue-800 text-sm ml-1">ทั้งหมด</span>
+                            </button>
+                            <button class="h-6 min-h-6 px-1 py-4 rounded-lg bg-blue-100 mr-1" mat-button>
+                                <mat-icon svgIcon="heroicons_outline:mail" class="text-blue-800 icon-size-4"></mat-icon>
+                                <span class="font-semibold text-blue-800 text-sm ml-1">ยังไม่อ่าน</span>
+                            </button>
+                            <!-- <mat-icon svgIcon="heroicons_outline:mail"></mat-icon>
+                            <mat-icon svgIcon="heroicons_outline:cash"></mat-icon> -->
+                            <button class="h-6 min-h-6 px-1 py-4 rounded-lg bg-blue-100 mr-1" mat-button>
+                                <mat-icon svgIcon="heroicons_outline:cash" class="text-blue-800 icon-size-4"></mat-icon>
+                                <span class="font-semibold text-blue-800 text-sm ml-1">โอนแล้ว</span>
+                            </button>
+                            <!-- <mat-icon svgIcon="mat_outline:swap_horizontal_circle" class="icon-size-6"></mat-icon> -->
+                            <button class="h-6 min-h-6 px-1 py-4 rounded-lg bg-amber-100" mat-button>
+                                <mat-icon svgIcon="mat_outline:swap_horizontal_circle"
+                                    class="text-amber-600 icon-size-4">
+                                </mat-icon>
+                                <span class="font-semibold text-amber-600 text-sm ml-1">รอเช็คยอด</span>
+                            </button>
+                        </div>
+                        <!-- Search -->
+                        <div class="mt-4">
+                            <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full"
+                                [floatLabel]="'always'">
+                                <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                <input matInput [autocomplete]="'off'" [placeholder]="'Search'"
+                                    (input)="filterChats(searchField.value)" #searchField>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="mt-4 ml-auto">
+                            <mat-icon class="icon-size-5 text-red-600 font-semibold"
+                                [svgIcon]="'heroicons_outline:ban'"></mat-icon>
+                        </div> -->
+                    </div>
+
+                    <!-- Chats -->
+                    <div class="flex-auto overflow-y-auto">
+                        <ng-container *ngIf="filteredChats.length > 0; else noChats">
+                            <ng-container *ngFor="let chat of filteredChats; trackBy: trackByFn">
+                                <div class="z-20 flex items-center py-4 px-4 cursor-pointer border-b"
+                                    [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedChat || selectedChat.id !== chat.id,
+                                                'bg-green-50 dark:bg-hover': selectedChat && selectedChat.id === chat.id}" [routerLink]="[chat.id]">
+                                    <div class="relative flex flex-0 items-center justify-center w-10 h-10">
+                                        <ng-container *ngIf="chat.unreadCount > 0">
+                                            <div class="absolute bottom-0 right-0 flex-0 w-2 h-2 -ml-0.5 rounded-full ring-2 ring-bg-card dark:ring-gray-900 bg-green-500 dark:bg-green-500 text-on-primary"
+                                                [class.ring-primary-50]="selectedChat && selectedChat.id === chat.id">
+                                            </div>
+                                        </ng-container>
+                                        <ng-container *ngIf="chat.contact.avatar">
+                                            <img class="w-full h-full rounded-full object-cover"
+                                                [src]="chat.contact.avatar" alt="Contact avatar" />
+                                        </ng-container>
+                                        <ng-container *ngIf="!chat.contact.avatar">
+                                            <div
+                                                class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                {{chat.contact.name.charAt(0)}}
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="min-w-0 ml-4">
+                                        <div class="font-medium leading-5 truncate">{{chat.contact.name}}</div>
+                                        <div class="leading-5 truncate text-secondary"
+                                            [class.text-green-600]="chat.unreadCount > 0"
+                                            [class.dark:text-green-600]="chat.unreadCount > 0">
+                                            {{chat.lastMessage}}
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                        <div class="text-sm leading-5 text-secondary">{{chat.lastMessageAt}}</div>
+                                        <ng-container *ngIf="chat.muted">
+                                            <!-- <mat-icon class="icon-size-5 text-red-600 font-semibold"
+                                                [svgIcon]="'heroicons_outline:ban'"></mat-icon> -->
+                                            <button class="h-6 min-h-6 px-1 rounded-full bg-red-100 ml-1" mat-button>
+                                                <mat-icon class="icon-size-4 text-red-600 font-semibold"
+                                                    [svgIcon]="'heroicons_outline:ban'"></mat-icon>
+                                                <span class="font-semibold text-red-800 text-sm">แบน</span>
+                                            </button>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+
+                </div>
+
+            </ng-container>
+
+            <!-- No chats template -->
+            <ng-template #noChats>
+                <div class="flex flex-auto flex-col items-center justify-center h-full">
+                    <mat-icon class="icon-size-24" [svgIcon]="'iconsmind:speach_bubble'"></mat-icon>
+                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">No chats</div>
+                </div>
+            </ng-template>
+
+            <!-- Conversation -->
+            <ng-container *ngIf="chats && chats.length > 0">
+                <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedChat && selectedChat.id,
+                                'hidden lg:flex': !selectedChat || !selectedChat.id}">
+                    <router-outlet></router-outlet>
+                </div>
+            </ng-container>
+
+            <!-- Flow -->
+            <ng-container *ngIf="chats && chats.length > 0 && selectedChat;">
+                <div
+                    class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-80 lg:max-w-80 bg-card dark:bg-transparent border-l">
+                    <div class="flex flex-col flex-0 py-4 px-4 border-b bg-gray-50 dark:bg-transparent">
+                        <div class="flex items-center">
+                            <div class="relative flex flex-0 items-center justify-center w-25 h-25 mt-3 mx-auto">
+                                <ng-container *ngIf="selectedChat.contact.avatar">
+                                    <img class="w-full h-full rounded-full object-cover"
+                                        [src]="selectedChat.contact.avatar" alt="Contact avatar" />
+                                </ng-container>
+                                <ng-container *ngIf="!selectedChat.contact.avatar">
+                                    <div
+                                        class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                        {{selectedChat.contact.name.charAt(0)}}
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <!-- Header -->
+                        <div class="flex flex-col flex-0 p-0 bg-gray-50 dark:bg-transparent">
+                            <div class="flex items-center">
+                                <div class="flex items-center">
+                                    <div class="font-bold truncate text-lg">
+                                        ลำดับการทำงาน
+                                    </div>
+                                    <div>
+                                    </div>
+                                </div>
+                                <button class="ml-auto -mr-4" mat-icon-button [matMenuTriggerFor]="chatsHeaderMenu">
+                                    <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                                    <mat-menu #chatsHeaderMenu>
+                                        <button mat-menu-item>
+                                            <mat-icon [svgIcon]="'heroicons_outline:user-group'"></mat-icon>
+                                            New group
+                                        </button>
+                                        <button mat-menu-item>
+                                            <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>
+                                            Create a room
+                                        </button>
+                                        <button mat-menu-item (click)="openProfile()">
+                                            <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+                                            Profile
+                                        </button>
+                                        <button mat-menu-item>
+                                            <mat-icon [svgIcon]="'heroicons_outline:archive'"></mat-icon>
+                                            Archived
+                                        </button>
+                                        <button mat-menu-item>
+                                            <mat-icon [svgIcon]="'heroicons_outline:star'"></mat-icon>
+                                            Starred
+                                        </button>
+                                        <button mat-menu-item>
+                                            <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
+                                            Settings
+                                        </button>
+                                    </mat-menu>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <div class="wrapper option-1 option-1-1">
+                                    <ol class="c-stepper">
+                                        <li class="c-stepper__item active">
+                                            <!-- <h3 class="c-stepper__title">Step 1</h3>
+                                            <p class="c-stepper__desc">Some desc text</p> -->
+                                            <mat-icon class="icon-size-5 c-stepper__icon font-bold"
+                                                svgIcon="mat_solid:shopping_basket"></mat-icon>
+                                        </li>
+                                        <li class="c-stepper__item">
+                                            <!-- <h3 class="c-stepper__title">Step 2</h3>
+                                            <p class="c-stepper__desc">Some desc text</p> -->
+                                            <mat-icon class="icon-size-5 c-stepper__icon font-bold"
+                                                svgIcon="mat_solid:account_balance_wallet"></mat-icon>
+                                        </li>
+                                        <li class="c-stepper__item">
+                                            <!-- <h3 class="c-stepper__title">Step 3</h3>
+                                            <p class="c-stepper__desc">Some desc text</p> -->
+                                            <mat-icon class="icon-size-5 c-stepper__icon font-bold"
+                                                svgIcon="mat_solid:access_time"></mat-icon>
+                                        </li>
+                                        <li class="c-stepper__item">
+                                            <mat-icon class="icon-size-5 c-stepper__icon font-bold"
+                                                svgIcon="mat_solid:location_on"></mat-icon>
+                                        </li>
+                                    </ol>
+                                </div>
+                                <!-- <div class="wrapper-progressBar">
+                                    <ul class="progressBar">
+                                        <li class="active">
+                                        </li>
+                                        <li class="active"></li>
+                                        <li>Paid</li>
+                                        <li>End</li>
+                                    </ul>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noSelectedChat>
+                <div class="flex flex-auto flex-col items-center justify-center h-full border-l">
+                    <mat-icon class="icon-size-24" [svgIcon]="'iconsmind:speach_bubble'"></mat-icon>
+                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">No data.</div>
+                </div>
+            </ng-template>
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
