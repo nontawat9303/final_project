@@ -185,19 +185,21 @@ app.get("/customer/:id", (req, res) => {
 
 //put_customer/:id
 app.put("/customer/:id", (req, res) => {
-  const customerId = req.params.id;
+  customerId = req.params.id;
+  const customer = 0;
+  const nameCustomer = req.body.nameCustomer;
   const name = req.body.name;
-  const customer = req.body.customer;
-  const nameCustumber = req.body.nameCustumber;
-  const tambon = req.body.tambon;
-  const aumpur = req.body.aumpur;
+  const address = req.body.singleAddress;
+  const tambon = req.body.subdistrict;
+  const aumpur = req.body.district;
   const phone = req.body.phone;
   const zipcode = req.body.zipcode;
+  const province = req.body.province;
 
   try {
       con.query(
-          `UPDATE customer SET name = '${name}', customer = '${customer}', nameCustumber = '${nameCustumber}',
-          tambon = '${tambon}', aumpur = '${aumpur}' , phone = '${phone}',zipcode = '${zipcode}'
+          `UPDATE customer SET name = '${name}', customer = '${customer}', nameCustomer = '${nameCustomer}',
+          tambon = '${tambon}', aumpur = '${aumpur}' , address ='${address}' , phone = '${phone}',zipcode = '${zipcode}', province='${province}'
           where id = ${customerId}`,
           (error, results, fields) => {
               if (error) throw new Error(error);
