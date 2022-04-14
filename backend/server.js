@@ -108,18 +108,19 @@ app.post("/product", (req, res) => {
 //Users Route START
 
 app.post("/customer", (req, res) => {
-    const customer = req.body.customer;
-    const nameCustumber = req.body.nameCustumber;
+    const customer = 0;
+    const nameCustomer = req.body.nameCustomer;
     const name = req.body.name;
-    const tambon = req.body.tambon;
-    const aumpur = req.body.aumpur;
+    const address = req.body.singleAddress;
+    const tambon = req.body.subdistrict;
+    const aumpur = req.body.district;
     const phone = req.body.phone;
     const zipcode = req.body.zipcode;
-
+    const province = req.body.province;
     try {
         con.query(
-            "INSERT INTO customer(customer, nameCustumber, name, tambon, aumpur, phone, zipcode) VALUES(?,?,?,?,?,?,?)",
-            [customer, nameCustumber, name, tambon, aumpur, phone, zipcode],
+            "INSERT INTO customer(customer, nameCustomer, name,address, tambon, aumpur,province, phone, zipcode) VALUES(?,?,?,?,?,?,?,?,?)",
+            [customer, nameCustomer, name,address, tambon, aumpur,province, phone, zipcode],
             (error, result, fields) => {
                 if (error) throw error;
 
@@ -145,7 +146,7 @@ app.post("/customer", (req, res) => {
 
 
 //get_customer
-app.get("/customers", (req, res) => {
+app.get("/customer", (req, res) => {
   try {
     con.query("SELECT * FROM customer", (error, results, fields) => {
         if (error) throw new Error(error);
