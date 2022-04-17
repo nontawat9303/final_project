@@ -185,34 +185,34 @@ app.get("/customer/:id", (req, res) => {
 
 //put_customer/:id
 app.put("/customer/:id", (req, res) => {
-  customerId = req.params.id;
-  const customer = 0;
-  const nameCustomer = req.body.nameCustomer;
-  const name = req.body.name;
-  const address = req.body.singleAddress;
-  const tambon = req.body.subdistrict;
-  const aumpur = req.body.district;
-  const phone = req.body.phone;
-  const zipcode = req.body.zipcode;
-  const province = req.body.province;
-
-  try {
-      con.query(
-          `UPDATE customer SET name = '${name}', customer = '${customer}', nameCustomer = '${nameCustomer}',
-          tambon = '${tambon}', aumpur = '${aumpur}' , address ='${address}' , phone = '${phone}',zipcode = '${zipcode}', province='${province}'
-          where id = ${customerId}`,
-          (error, results, fields) => {
-              if (error) throw new Error(error);
-
-              return res
-                  .status(200)
-                  .send({ status: 200, message: "success", data: results });
-          }
-      );
-  } catch (error) {
-      return res.status(500).send({ status: 500, message: error.message });
-  }
-});
+    customerId = req.params.id;
+    const customer = 0;
+    const nameCustomer = req.body.nameCustomer;
+    const name = req.body.name;
+    const address = req.body.singleAddress;
+    const tambon = req.body.subdistrict;
+    const aumpur = req.body.district;
+    const phone = req.body.phone;
+    const zipcode = req.body.zipcode;
+    const province = req.body.province;
+  
+    try {
+        con.query(
+            `UPDATE customer SET name = '${name}', customer = '${customer}', nameCustomer = '${nameCustomer}',
+            tambon = '${tambon}', aumpur = '${aumpur}' , address ='${address}' , phone = '${phone}',zipcode = '${zipcode}', province='${province}'
+            where id = ${customerId}`,
+            (error, results, fields) => {
+                if (error) throw new Error(error);
+  
+                return res
+                    .status(200)
+                    .send({ status: 200, message: "success", data: results });
+            }
+        );
+    } catch (error) {
+        return res.status(500).send({ status: 500, message: error.message });
+    }
+  });
 
 
 //delete/customer/:id
@@ -290,17 +290,18 @@ app.get("/transfer/:orders_id", (req, res) => {
 
 
 //post/transfer
-app.post("/transfer/:order_id", (req, res) => {
-  const payAcount = req.body.payAcount;
-  const payDate	 = req.body.payDate	;
-  const payAmout = req.body.payAmout;
-  const slip = req.body.slip;
-  const orderID = req.params.order_id;
+app.post("/transfer", (req, res) => {
+  const payAcount = req.body.bank;
+  const payDate	 = req.body.createdate	;
+  const payAmount = req.body.payAmount;
+  const comment = req.body.comment;
+  const slip = req.body.paySlip;
+  const orderID = req.body.orderId;
 
   try {
       con.query(
-          "INSERT INTO transfer(payAcount, payDate	, payAmout, slip, orderID) VALUES(?,?,?,?,?)",
-          [payAcount, payDate	, payAmout, slip, orderID],
+          "INSERT INTO transfer(payAcount, payDate	, payAmount,comment, slip, orderID) VALUES(?,?,?,?,?,?)",
+          [payAcount, payDate	, payAmount,comment, slip, orderID],
           (error, result, fields) => {
               if (error) throw error;
 
@@ -319,17 +320,17 @@ app.post("/transfer/:order_id", (req, res) => {
 
 //put/transfer/:id
 app.put("/transfer/:id", (req, res) => {
-  const transferID = req.params.id;
+  const transferID = req.body.id;
   const payAcount = req.body.payAcount;
   const payDate	 = req.body.payDate	;
-  const payAmout = req.body.payAmout;
-  const slip = req.body.slip;
-  const orderID = req.params.order_id;
+  const payAmount = req.body.payAmout;
+  const slip = req.body.paySlip;
+  const orderID = req.body.orderId;
 
 
   try {
       con.query(
-          `UPDATE transfer SET payAcount = '${payAcount}', payDate = '${payDate}', payAmout = '${payAmout}',
+          `UPDATE transfer SET payAcount = '${payAcount}', payDate = '${payDate}', payAmount = '${payAmount}',
           slip = '${slip}', orderID = '${orderID}' 
           where id = ${transferID}`,
           (error, results, fields) => {
@@ -350,7 +351,7 @@ app.put("/transfer/:id", (req, res) => {
 //get/orders
 app.get("/orders", (req, res) => {
   try {
-    con.query("SELECT * FROM orders", (error, results, fields) => {
+    con.query("SELECT *,orders.id FROM orders LEFT JOIN customer ON customer.id = orders.customerId", (error, results, fields) => {
         if (error) throw new Error(error);
 
         return res
@@ -388,7 +389,7 @@ app.post("/order", (req, res) => {
   const codeBill = req.body.codeBill;
   const customerId	 = req.body.customerId	;
   const typeDelivery = req.body.typeDelivery;
-  const deliverly = req.body.deliverly;
+  const deliverly = req.body.delivery;
   const traking = req.body.traking;
   const status = req.body.status;
   const sumPrice = req.body.sumPrice;
@@ -445,12 +446,36 @@ app.put("/order/:id", (req, res) => {
   }
 });
 
+//put order status
+app.put("/orderStatus/:id", (req, res) => {
+    const ordersId = req.params.id;
+    const status = req.body.status;
+    console.log(ordersId);
+  
+    try {
+        con.query(
+            `UPDATE orders SET 
+            status = '${status}'
+            where id = ${ordersId}`,
+            (error, results, fields) => {
+                if (error) throw new Error(error);
+  
+                return res
+                    .status(200)
+                    .send({ status: 200, message: "success", data: results });
+            }
+        );
+    } catch (error) {
+        return res.status(500).send({ status: 500, message: error.message });
+    }
+  });
+
 
 
 //delete/orders/:id
 app.delete("/order/:id", (req, res) => {
   const ordersId = req.params.id;
-
+  console.log(ordersId);
   try {
       con.query(
           `DELETE FROM orders where id = ${ordersId}`,
@@ -500,7 +525,7 @@ app.post("/order_detail/:order_id", (req, res) => {
   try {
       con.query(
           "INSERT INTO order_details (orderID , codeProduct	, nameProduct, amount, price) VALUES(?,?,?,?,?)",
-          [orderID , codeProduct	, nameProduct, amount, price],
+          [orderID , codeProduct, nameProduct, amount, price],
           (error, result, fields) => {
               if (error) throw error;
 
@@ -515,13 +540,14 @@ app.post("/order_detail/:order_id", (req, res) => {
       return res.status(500).send({ status: 500, message: error.message });
   }
 });
+
 app.post("/order_details/:order_id", (req, res) => {
   const orderID = req.params.order_id;
   
   const dataJsonArrayOrderDetail = JSON.parse(req.body.jsonArrayOrderDetail);
 
-  const sql = 'INSERT INTO order_details (orderID, codeProduct, nameProduct, amount, price) VALUES ?';
-  const data = dataJsonArrayOrderDetail.map(item => ([orderID, item.codeProduct, item.nameProduct, item.amount, item.price]));
+  const sql = 'INSERT INTO order_details (orderID, codeProduct,  amount, price) VALUES ?';
+  const data = dataJsonArrayOrderDetail.map(item => ([orderID, item.codeProduct,  item.amount, item.price]));
   try {
       con.query(sql,[data],(error, result, fields) => {
               if (error) throw error;
