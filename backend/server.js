@@ -348,6 +348,25 @@ app.put("/transfer/:id", (req, res) => {
 
 
 
+//getDate/orders
+app.get("/orders/date", (req, res) => {
+  const dateStart = req.body.dateStart;
+  const dateFinish = req.body.dateFinish;
+
+  try {
+    con.query(`SELECT *,orders.id FROM orders WHERE creactAt BETWEEN '${dateStart}' AND '${dateFinish}';`, (error, results, fields) => {
+        if (error) throw new Error(error);
+
+        return res
+            .status(200)
+            .send({ status: 200, message: "success", data: results });
+    });
+} catch (error) {
+    return res.status(500).send({ status: 500, message: error.message });
+}
+});
+
+
 //get/orders
 app.get("/orders", (req, res) => {
   try {
@@ -362,6 +381,8 @@ app.get("/orders", (req, res) => {
     return res.status(500).send({ status: 500, message: error.message });
 }
 });
+
+
 
 //orders/:id
 app.get("/orders/:id", (req, res) => {
